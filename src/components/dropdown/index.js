@@ -141,6 +141,7 @@ export default class Dropdown extends PureComponent {
       selected: -1,
       modal: false,
       value,
+      isKeyboardOn:false
     };
   }
 
@@ -151,13 +152,10 @@ export default class Dropdown extends PureComponent {
   }
 
   componentWillMount() {
-    const handler = (e) => {
-      if (this.state.modal) {
-        this.onPress(null);
-      }
-    };
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handler);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', handler);
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', 
+    ()=>this.setState({isKeyboardOn:true}));
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', 
+    ()=>this.setState({isKeyboardOn:false}));
   }
 
   componentDidMount() {
@@ -171,6 +169,8 @@ export default class Dropdown extends PureComponent {
   }
 
   onPress(event) {
+    if(this.state.isKeyboardOn)
+     return;
     let {
       data,
       disabled,
